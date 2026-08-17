@@ -581,6 +581,7 @@ function go(p){
 }
 
 var chatState={name:null,phone:null,mode:null,greeted:false,lastOffer:null};
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
 function chatPush(who,text){
   var log=document.getElementById('chatlog');
   var el=document.createElement('div');el.className='msg '+who;el.textContent=text;
@@ -634,7 +635,10 @@ function offerBook(){
 }
 function offerText(){
   chatState.lastOffer=null;chatState.mode='name';
-  return {m:["Can do. Who am I passing along to Bill? First name is fine."]};
+  return {m:[pick([
+    "Can do. Who am I passing along to Bill? First name is fine.",
+    "You got it. What's your first name?",
+    "Sure thing. Who should I say is asking? Just a first name works."])]};
 }
 var chipActions={
   "Open the portal":function(){
@@ -657,7 +661,7 @@ var chatIntents=[
     return {m:["Four main things: tax preparation for individuals and businesses, year-round tax planning, accounting, and business advisory.",
                "Here, I'll take you to the Services page so you can see what's inside each one."],c:["Set up a time with Bill","Thanks"]};}],
   [/\b(hi|hello|hey|good (morning|afternoon|evening))\b/i, function(){
-    return {m:["Hi there. What can I help you with today?"],c:["I need help with my taxes","What do you charge?","Set up a time with Bill"]};}],
+    return {m:[pick(["Hi there. What can I help you with today?","Hey, good to see you. What's on your mind?","Hello! What can I point you toward?"])],c:["I need help with my taxes","What do you charge?","Set up a time with Bill"]};}],
   [/\b(price|pricing|cost|fee|charge|how much|rate)\b/i, function(){
     return {m:["Fair question, and one we actually answer. Everything is flat-rate and quoted before any work starts, based on how complex your situation is. No hourly meters running.",
                "The number comes out of a free intro call with Bill, so you know exactly what you'd pay before committing to anything. Happy to set that up if you want."],
@@ -705,7 +709,7 @@ var chatIntents=[
   [/\b(not yet|just looking|browsing|no thanks|got it, thanks)\b/i, function(){
     return {m:["No pressure at all. Poke around the site, and I'm right here if a question comes up."]};}],
   [/\b(thank|thanks|appreciate)\b/i, function(){
-    return {m:["Happy to help. Anything else on your mind?"],c:["Set up a time with Bill","That's all"]};}],
+    return {m:[pick(["Happy to help. Anything else on your mind?","Of course. Anything else I can grab for you?","Any time. What else can I do for you?"])],c:["Set up a time with Bill","That's all"]};}],
   [/\b(bye|goodbye|later|that'?s all)\b/i, function(){
     return {m:["Take care. We're right here whenever you need us."]};}]
 ];
@@ -720,15 +724,27 @@ function chatAnswer(t){
   }
   if(phone){
     chatState.phone=phone[2];chatState.mode=null;
-    var who=chatState.name?(" "+chatState.name+","):"",
-    out=["Got it"+(who||",")+" you're on Bill's list. He'll text you at "+phone[2]+", most days that's within the hour.",
-         "Anything you want me to jot down for him before he reaches out?"];
-    return {m:out};
+    var who=chatState.name?(" "+chatState.name+","):",";
+    return {m:[pick([
+      "Got it"+who+" you're on Bill's list. He'll text you at "+phone[2]+", most days that's within the hour.",
+      "Perfect"+who+" I've passed that along. Expect a text from Bill at "+phone[2]+" shortly.",
+      "Done"+who+" Bill has your number. He'll reach out to "+phone[2]+" soon, he's usually quick about it."]),
+      pick(["Anything you want me to jot down for him before he reaches out?",
+            "Anything else I can note for him in the meantime?"])]};
   }
   if(/\b(have bill text me|text me|call me back)\b/i.test(t)) return offerText();
+  if(/^(no|nope|nah|not (right )?now|maybe later|i'?m (good|fine|okay|ok))\b/i.test(t)){
+    chatState.lastOffer=null;
+    return {m:[pick([
+      "All good. I'm right here if anything comes up.",
+      "No worries at all. Have a look around, and give me a shout if you need anything.",
+      "Totally fine. The door's open whenever you're ready."])]};
+  }
   if(/^(yes|yeah|yep|sure|ok|okay|sounds good|please|let'?s do it|why not)\b/i.test(t)){
     if(chatState.lastOffer==='book') return offerBook();
     if(chatState.lastOffer==='text') return offerText();
+    return {m:[pick(["Happy to help. What are you after?","Sure, point me at it. What do you need?"])],
+            c:["Set up a time with Bill","What do you charge?","What services do you offer?"]};
   }
   if(/go to resources/i.test(t)){setTimeout(function(){go('resources')},900);
     return {m:["Heading there now. Everything's grouped by federal, Virginia, and client tools."]};}
@@ -743,8 +759,13 @@ function chatAnswer(t){
     return {m:["Hmm, I didn't catch a number in there. Ten digits, any format you like."]};
   }
   chatState.lastOffer='text';
-  return {m:["That one's a little outside my lane, but it's exactly the kind of thing Bill answers all day.",
-             "Want me to have him text you? You'll get a real answer instead of a chatbot's best guess."],c:["Have Bill text me","Set up a time with Bill"]};
+  return pick([
+    {m:["That one's a little outside my lane, but it's exactly the kind of thing Bill answers all day.",
+        "Want me to have him text you? You'll get a real answer instead of a chatbot's best guess."],c:["Have Bill text me","Set up a time with Bill"]},
+    {m:["Honestly, I'd rather connect you with Bill on that one than wing it and get it half right.",
+        "He's quick on the reply, want me to have him text you?"],c:["Have Bill text me","Set up a time with Bill"]},
+    {m:["Hmm, that's one I'd want Bill to answer properly rather than me guessing.",
+        "Easiest thing is a quick text from him, or grab a spot on his calendar. Your call."],c:["Have Bill text me","Set up a time with Bill"]}]);
 }
 function userSays(t){
   chatPush('me',t);
