@@ -577,8 +577,7 @@ function go(p){
   window.scrollTo({top:0,behavior:'instant'});
 }
 
-var chatState={name:null,phone:null,mode:null,greeted:false};
-function chatEsc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+var chatState={name:null,phone:null,mode:null,greeted:false,lastOffer:null};
 function chatPush(who,text){
   var log=document.getElementById('chatlog');
   var el=document.createElement('div');el.className='msg '+who;el.textContent=text;
@@ -603,7 +602,7 @@ function botSays(msgs,chips){
     if(i>=msgs.length){if(chips)chatChips(chips);return}
     var tp=document.createElement('div');tp.className='typing';tp.innerHTML='<i></i><i></i><i></i>';
     log.appendChild(tp);log.scrollTop=log.scrollHeight;
-    var delay=Math.min(600+msgs[i].length*14,2100);
+    var delay=Math.min(500+msgs[i].length*16,2400);
     setTimeout(function(){tp.remove();chatPush('them',msgs[i]);i++;next()},delay);
   }
   next();
@@ -613,91 +612,116 @@ function toggleChat(){
   box.classList.toggle('open');
   if(box.classList.contains('open')&&!chatState.greeted){
     chatState.greeted=true;
-    botSays(["Hi, welcome to Coastal VA Tax! I'm the firm's virtual assistant.",
-             "I can answer questions about our services and pricing, help with tax deadlines, or get you on Bill's calendar. What can I do for you?"],
-            ["Book a consultation","What do you charge?","What services do you offer?","I got an IRS letter"]);
+    botSays(["Hi, thanks for stopping by Coastal VA Tax. I'm the office assistant, happy to point you in the right direction.",
+             "What brings you in today?"],
+            ["I need help with my taxes","What do you charge?","I got an IRS letter","Set up a time with Bill"]);
   }
 }
+function offerBook(){
+  chatState.lastOffer=null;
+  setTimeout(openBook,2200);
+  return {m:["Sure thing. Bill does a free 30-minute intro call, no strings on it.",
+             "Pulling up his calendar for you now, grab any day that's highlighted."]};
+}
+function offerText(){
+  chatState.lastOffer=null;chatState.mode='name';
+  return {m:["Can do. Who am I passing along to Bill? First name is fine."]};
+}
 var chatIntents=[
+  [/\b(robot|a real person|human|an? ai\b|automated)\b/i, function(){
+    return {m:["You got me, I'm the automated assistant. I handle the front desk stuff, and anything beyond that goes straight to Bill himself.",
+               "He's the real deal though, I promise. Want me to connect you?"],c:["Set up a time with Bill","Have Bill text me"],offer:'book'};}],
+  [/\bhow are you\b/i, function(){
+    return {m:["Doing great, thanks for asking. What can I help you with?"]};}],
   [/\b(hi|hello|hey|good (morning|afternoon|evening))\b/i, function(){
-    return {m:["Hi there! What can I help you with today?"],c:["Book a consultation","What do you charge?","What services do you offer?"]};}],
+    return {m:["Hi there. What can I help you with today?"],c:["I need help with my taxes","What do you charge?","Set up a time with Bill"]};}],
   [/\b(price|pricing|cost|fee|charge|how much|rate)\b/i, function(){
-    return {m:["Pricing here is flat and quoted up front, based on the complexity of your situation. No hourly billing, no surprise line items.",
-               "The quote comes out of a free 30-minute consultation with Bill, so you know your exact number before any work starts. Want me to set that up?"],
-            c:["Book a consultation","Have Bill text me"]};}],
-  [/\b(appoint|consult|book|schedule|meet|come in|talk to bill)\b/i, function(){
-    setTimeout(openBook,2400);
-    return {m:["Happy to! Bill offers a free 30-minute consultation, by phone or at the Chesapeake office.",
-               "I'm opening his calendar for you now. Pick any highlighted day."]};}],
+    return {m:["Fair question, and one we actually answer. Everything is flat-rate and quoted before any work starts, based on how complex your situation is. No hourly meters running.",
+               "The number comes out of a free intro call with Bill, so you know exactly what you'd pay before committing to anything. Happy to set that up if you want."],
+            c:["Set up a time with Bill","Not yet, just looking"],offer:'book'};}],
+  [/\b(appoint|consult|book|schedule|meet|come in|set up a time|talk to bill)\b/i, offerBook],
   [/\b(refund)\b/i, function(){
-    return {m:["For federal refunds, the IRS \"Where's My Refund?\" tool is the fastest check, and Virginia has its own refund tracker. Both are linked on our Resources page.",
-               "If we prepared your return, Bill can look into the status directly. Want him to check?"],c:["Have Bill text me","Go to Resources"]};}],
+    return {m:["If it's a federal refund, the IRS \"Where's My Refund?\" tool is honestly the fastest check, and Virginia has its own tracker. Both are linked on our Resources page.",
+               "If we prepared your return, Bill can look into it directly."],c:["Have Bill text me","Go to Resources"],offer:'text'};}],
   [/\b(irs|audit|letter|notice)\b/i, function(){
-    return {m:["First: don't panic, and don't respond to it yet. Most IRS letters are routine and look far scarier than they are.",
-               "Send us the letter before you do anything. Bill will review it, translate what it actually means, and handle the response with you. Can I get your number so he can reach out today?"],c:["Have Bill text me"]};}],
+    return {m:["Okay, first thing: don't respond to it yet, and try not to lose sleep over it. Most IRS letters are routine, they just read like a threat.",
+               "Get it to us before you do anything and Bill will tell you what it actually says and what to do about it. He's talked a lot of people off this ledge."],
+            c:["Have Bill text me","Set up a time with Bill"],offer:'text'};}],
   [/\b(deadline|due date|extension|when.*(file|due)|april)\b/i, function(){
-    return {m:["All the key federal and Virginia due dates are linked on our Resources page, straight from the IRS and Virginia Tax.",
-               "If you're worried about time, an extension is quick to file and buys you until October. Want Bill to look at your situation?"],c:["Book a consultation","Go to Resources"]};}],
+    return {m:["The Resources page has every federal and Virginia due date linked straight from the source, so you're never guessing.",
+               "And if time is getting tight, an extension takes minutes to file and moves you to October. No shame in it, half the country does it."],c:["Go to Resources","Set up a time with Bill"],offer:'book'};}],
   [/\b(portal|upload|document|canopy|log ?in)\b/i, function(){
-    return {m:["Documents move through our secure Canopy client portal, never plain email. The Client Portal button at the top right takes you straight there.",
-               "First time using it? Bill will walk you through it in about two minutes."],c:["Have Bill text me"]};}],
+    return {m:["All documents go through the Canopy portal, it's encrypted end to end so nothing sensitive ever rides in a regular email.",
+               "The Client Portal button at the top right takes you there. If it's your first time, it's pretty painless, but Bill can walk you through it if you'd like."],offer:'text',c:["Have Bill text me","Got it, thanks"]};}],
   [/\b(bookkeep|payroll|financial statement|monthly)\b/i, function(){
-    return {m:["Yes, we handle monthly bookkeeping, reconciliation, financial statements, and payroll coordination, so your books are always decision-ready.",
-               "Tell me a bit about your business and I'll flag it for Bill, or he can just give you a call."],c:["Have Bill text me","Book a consultation"]};}],
+    return {m:["Yep, that's a big part of what we do. Monthly bookkeeping, reconciliation, financial statements, payroll coordination, the whole back office.",
+               "What kind of business are you running? That helps me point you right."]};}],
   [/\b(llc|s.?corp|corporation|self.?employed|1099|entity|business tax)\b/i, function(){
-    return {m:["We work with LLCs, S corps, partnerships, and the self-employed, from annual returns to quarterly estimates to entity structure advice.",
-               "That last one matters more than most owners realize. The right election can save real money. Want Bill to take a look at your setup?"],c:["Book a consultation","Have Bill text me"]};}],
-  [/\b(service|offer|what do you do|help with|accounting)\b/i, function(){
-    return {m:["Four main things: individual and business tax preparation, year-round tax planning, accounting, and business advisory.",
-               "The full breakdown is on our Services page. Anything specific on your mind?"],c:["Tax prep","Tax planning","Book a consultation"]};}],
-  [/\b(tax prep|prepare|file my|return)\b/i, function(){
-    return {m:["Federal and Virginia returns, individuals and businesses, filed accurately and on time, with a prior-year review included to catch anything your last preparer missed.",
-               "Everything runs through the secure portal, so there's no paper chase. Want to get started?"],c:["Book a consultation","Have Bill text me"]};}],
+    return {m:["We work with LLCs, S corps, partnerships, and self-employed folks all the time. Returns, quarterlies, and the structure questions in between.",
+               "If you've never had anyone look at whether your entity setup is actually the right one, that conversation alone tends to pay for itself."],c:["Set up a time with Bill","Have Bill text me"],offer:'book'};}],
+  [/\b(help with my taxes|tax prep|prepare|file my|my return|need help)\b/i, function(){
+    return {m:["That's what we're here for. Federal and Virginia returns for individuals and businesses, and we always review your prior year for anything that got missed.",
+               "Are you filing as an individual, or is this for a business?"],c:["Individual","Business"]};}],
+  [/^individual$/i, function(){
+    return {m:["Perfect. The easiest next step is a quick intro call with Bill, he'll tell you exactly what to gather and quote you a flat price on the spot."],c:["Set up a time with Bill","Have Bill text me"],offer:'book'};}],
+  [/^business$/i, function(){
+    return {m:["Got it. Business work is Bill's bread and butter, returns, quarterlies, books, all of it.",
+               "Easiest next step is a quick call so he can hear how the business is set up."],c:["Set up a time with Bill","Have Bill text me"],offer:'book'};}],
   [/\b(planning|plan ahead|estimate|quarterly)\b/i, function(){
-    return {m:["Tax planning is the part most people skip, and it's where the real savings live. Mid-year and fall check-ins, estimated payments, retirement contributions, timing decisions.",
-               "The goal: know your April number in October, and shrink it. Bill can show you what that looks like for your situation."],c:["Book a consultation"]};}],
+    return {m:["Planning is the part most people skip, and it's usually where the money is. Bill does mid-year and fall check-ins so April is never a surprise.",
+               "By the time filing season hits, you already know your number and you've had months to improve it."],c:["Set up a time with Bill"],offer:'book'};}],
   [/\b(hour|open|location|address|where|office|directions)\b/i, function(){
-    return {m:["We're at 1317 Executive Blvd, Suite 110, Chesapeake, VA 23320.",
-               "Bill meets clients by appointment, and most things can also be handled by phone and the secure portal. Want me to pull up his calendar?"],c:["Book a consultation"]};}],
+    return {m:["We're at 1317 Executive Blvd, Suite 110 in Chesapeake, right off the 168.",
+               "Bill sees clients by appointment, and honestly most things can be handled by phone and the portal without a trip in."],c:["Set up a time with Bill"],offer:'book'};}],
   [/\b(phone|call|number|email|contact|reach)\b/i, function(){
-    return {m:["The office line is (757) 530-4075 ext. 233, and email is accounting@covatax.com.",
-               "Or leave your number right here and Bill will text you back, usually within the hour on business days."],c:["Have Bill text me"]};}],
+    return {m:["Office line is (757) 530-4075, extension 233. Email is accounting@covatax.com.",
+               "Or just drop your number here and Bill will text you back, that's usually the quickest."],offer:'text',c:["Have Bill text me"]};}],
   [/\b(new client|switch|accepting|take.*clients|move.*(accountant|cpa|preparer))\b/i, function(){
-    return {m:["We are taking new clients, and switching is easier than most people expect. We handle the hand-off, request your prior returns, and review them for missed savings.",
-               "Most new clients are fully moved over within a week. Want Bill to reach out?"],c:["Have Bill text me","Book a consultation"]};}],
+    return {m:["We are taking new clients, and switching is less painful than people expect. We request your prior returns, handle the hand-off, and give last year a second look while we're at it.",
+               "That second look finds something more often than you'd think."],c:["Have Bill text me","Set up a time with Bill"],offer:'text'};}],
+  [/\b(not yet|just looking|browsing|no thanks|got it, thanks)\b/i, function(){
+    return {m:["No pressure at all. Poke around the site, and I'm right here if a question comes up."]};}],
   [/\b(thank|thanks|appreciate)\b/i, function(){
-    return {m:["You're very welcome! Anything else I can help with?"],c:["Book a consultation","That's all"]};}],
+    return {m:["Happy to help. Anything else on your mind?"],c:["Set up a time with Bill","That's all"]};}],
   [/\b(bye|goodbye|later|that'?s all)\b/i, function(){
-    return {m:["Take care! We're a message away whenever you need us."]};}]
+    return {m:["Take care. We're right here whenever you need us."]};}]
 ];
 function chatAnswer(t){
   var phone=t.match(/(\+?1[\s.\-]?)?(\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4})/);
   if(chatState.mode==='name'&&!phone){
-    chatState.name=t.replace(/^(i'?m|my name is|it'?s|this is)\s+/i,'').split(/\s+/)[0];
-    chatState.name=chatState.name.charAt(0).toUpperCase()+chatState.name.slice(1);
+    var nm=t.replace(/^(i'?m|my name is|it'?s|this is|name'?s)\s+/i,'').split(/\s+/)[0].replace(/[^a-zA-Z'\-]/g,'');
+    if(nm){chatState.name=nm.charAt(0).toUpperCase()+nm.slice(1).toLowerCase();}
     chatState.mode='phone';
-    return {m:["Nice to meet you, "+chatState.name+"! And what's the best number for Bill to text you at?"]};
+    var greet=chatState.name?("Nice to meet you, "+chatState.name+". "):"";
+    return {m:[greet+"And what's a good number for Bill to text you at?"]};
   }
   if(phone){
     chatState.phone=phone[2];chatState.mode=null;
-    var who=chatState.name?(", "+chatState.name):"";
-    return {m:["Perfect"+who+", you're all set. Bill will text you at "+phone[2]+" shortly, usually within the hour on business days.",
-               "Anything you'd like me to note for him before he reaches out?"]};
+    var who=chatState.name?(" "+chatState.name+","):"",
+    out=["Got it"+(who||",")+" you're on Bill's list. He'll text you at "+phone[2]+", most days that's within the hour.",
+         "Anything you want me to jot down for him before he reaches out?"];
+    return {m:out};
   }
-  if(/have bill text me|text me|call me back/i.test(t)){
-    chatState.mode='name';
-    return {m:["Absolutely. What's your first name?"]};
+  if(/\b(have bill text me|text me|call me back)\b/i.test(t)) return offerText();
+  if(/^(yes|yeah|yep|sure|ok|okay|sounds good|please|let'?s do it|why not)\b/i.test(t)){
+    if(chatState.lastOffer==='book') return offerBook();
+    if(chatState.lastOffer==='text') return offerText();
   }
   if(/go to resources/i.test(t)){setTimeout(function(){go('resources')},900);
-    return {m:["Taking you to the Resources page now. Everything's organized by federal, Virginia, and client tools."]};}
+    return {m:["Heading there now. Everything's grouped by federal, Virginia, and client tools."]};}
   for(var i=0;i<chatIntents.length;i++){
-    if(chatIntents[i][0].test(t)) return chatIntents[i][1]();
+    if(chatIntents[i][0].test(t)){
+      var r=chatIntents[i][1]();
+      chatState.lastOffer=r.offer||null;
+      return r;
+    }
   }
   if(chatState.mode==='phone'){
-    return {m:["I didn't catch a phone number in that. Ten digits, any format works!"]};
+    return {m:["Hmm, I didn't catch a number in there. Ten digits, any format you like."]};
   }
-  return {m:["Good question. I'll flag that for Bill so you get a real answer instead of a guess.",
-             "What's your first name, and I'll have him text you?"],c:["Have Bill text me","Book a consultation"]};
+  chatState.lastOffer='text';
+  return {m:["That one's a little outside my lane, but it's exactly the kind of thing Bill answers all day.",
+             "Want me to have him text you? You'll get a real answer instead of a chatbot's best guess."],c:["Have Bill text me","Set up a time with Bill"]};
 }
 function userSays(t){
   chatPush('me',t);
