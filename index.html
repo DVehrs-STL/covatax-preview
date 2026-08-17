@@ -148,6 +148,14 @@
   .msg{max-width:82%;padding:9px 13px;border-radius:12px;font-size:13.5px;line-height:1.45}
   .msg.them{background:#fff;border:1px solid var(--line);border-bottom-left-radius:3px;align-self:flex-start}
   .msg.me{background:var(--navy);color:#fff;border-bottom-right-radius:3px;align-self:flex-end}
+  .chathead .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#3DBE5B;margin-right:7px;box-shadow:0 0 0 3px rgba(61,190,91,.22)}
+  .typing{display:flex;gap:4px;padding:11px 14px;background:#fff;border:1px solid var(--line);border-radius:12px;border-bottom-left-radius:3px;align-self:flex-start;width:52px}
+  .typing i{width:7px;height:7px;border-radius:50%;background:#9db0c0;animation:tp 1.1s infinite}
+  .typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.36s}
+  @keyframes tp{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;align-self:flex-start;max-width:95%}
+  .chip{border:1px solid var(--blue);color:var(--blue);background:#fff;border-radius:16px;padding:6px 13px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+  .chip:hover{background:var(--sky)}
   .chatin{display:flex;border-top:1px solid var(--line)}
   .chatin input{flex:1;border:none;padding:12px 14px;font-size:13.5px;outline:none;font-family:'Inter',sans-serif}
   .chatin button{border:none;background:var(--gold);color:#fff;padding:0 18px;font-weight:600;cursor:pointer;font-size:13.5px}
@@ -444,7 +452,7 @@
         <p>We believe good tax work is a year-round conversation, not a once-a-year scramble. That is why clients hear from us before deadlines, not after them.</p>
         <button class="btn" onclick="openBook()">Meet with Bill →</button>
       </div>
-      <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=900&q=70" alt="Bill Neice, Coastal VA Tax">
+      <img src="bill_photo.jpg" alt="Bill Neice, Coastal VA Tax LLC" style="max-width:420px;justify-self:center">
     </div>
   </div></section>
   <section class="sand"><div class="wrap">
@@ -527,10 +535,8 @@
 </footer>
 
 <div class="chatbox" id="chatbox">
-  <div class="chathead">Coastal VA Tax<small>We typically reply within the hour</small></div>
-  <div class="chatlog" id="chatlog">
-    <div class="msg them">Hi there! 👋 How can we help you today? Ask about our services or leave your number and Bill will text you back.</div>
-  </div>
+  <div class="chathead"><span class="dot"></span>Coastal Assistant<small>AI receptionist · Coastal VA Tax</small></div>
+  <div class="chatlog" id="chatlog"></div>
   <div class="chatin">
     <input id="chatinput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChat()">
     <button onclick="sendChat()">Send</button>
@@ -571,27 +577,138 @@ function go(p){
   window.scrollTo({top:0,behavior:'instant'});
 }
 
-var chatReplies=[
-  "Thanks for reaching out! Can I grab your name and the best number to text you back on?",
-  "Perfect, got it. Bill will text you back shortly — usually within the hour during business days.",
-  "Anything else I can note for Bill before he reaches out?"
+var chatState={name:null,phone:null,mode:null,greeted:false};
+function chatEsc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function chatPush(who,text){
+  var log=document.getElementById('chatlog');
+  var el=document.createElement('div');el.className='msg '+who;el.textContent=text;
+  log.appendChild(el);log.scrollTop=log.scrollHeight;
+}
+function chatChips(list){
+  var log=document.getElementById('chatlog');
+  var old=log.querySelector('.chips');if(old)old.remove();
+  var box=document.createElement('div');box.className='chips';
+  list.forEach(function(c){
+    var b=document.createElement('button');b.className='chip';b.textContent=c;
+    b.onclick=function(){box.remove();userSays(c)};
+    box.appendChild(b);
+  });
+  log.appendChild(box);log.scrollTop=log.scrollHeight;
+}
+function botSays(msgs,chips){
+  var log=document.getElementById('chatlog');
+  var old=log.querySelector('.chips');if(old)old.remove();
+  var i=0;
+  function next(){
+    if(i>=msgs.length){if(chips)chatChips(chips);return}
+    var tp=document.createElement('div');tp.className='typing';tp.innerHTML='<i></i><i></i><i></i>';
+    log.appendChild(tp);log.scrollTop=log.scrollHeight;
+    var delay=Math.min(600+msgs[i].length*14,2100);
+    setTimeout(function(){tp.remove();chatPush('them',msgs[i]);i++;next()},delay);
+  }
+  next();
+}
+function toggleChat(){
+  var box=document.getElementById('chatbox');
+  box.classList.toggle('open');
+  if(box.classList.contains('open')&&!chatState.greeted){
+    chatState.greeted=true;
+    botSays(["Hi, welcome to Coastal VA Tax! I'm the firm's virtual assistant.",
+             "I can answer questions about our services and pricing, help with tax deadlines, or get you on Bill's calendar. What can I do for you?"],
+            ["Book a consultation","What do you charge?","What services do you offer?","I got an IRS letter"]);
+  }
+}
+var chatIntents=[
+  [/\b(hi|hello|hey|good (morning|afternoon|evening))\b/i, function(){
+    return {m:["Hi there! What can I help you with today?"],c:["Book a consultation","What do you charge?","What services do you offer?"]};}],
+  [/\b(price|pricing|cost|fee|charge|how much|rate)\b/i, function(){
+    return {m:["Pricing here is flat and quoted up front, based on the complexity of your situation. No hourly billing, no surprise line items.",
+               "The quote comes out of a free 30-minute consultation with Bill, so you know your exact number before any work starts. Want me to set that up?"],
+            c:["Book a consultation","Have Bill text me"]};}],
+  [/\b(appoint|consult|book|schedule|meet|come in|talk to bill)\b/i, function(){
+    setTimeout(openBook,2400);
+    return {m:["Happy to! Bill offers a free 30-minute consultation, by phone or at the Chesapeake office.",
+               "I'm opening his calendar for you now. Pick any highlighted day."]};}],
+  [/\b(refund)\b/i, function(){
+    return {m:["For federal refunds, the IRS \"Where's My Refund?\" tool is the fastest check, and Virginia has its own refund tracker. Both are linked on our Resources page.",
+               "If we prepared your return, Bill can look into the status directly. Want him to check?"],c:["Have Bill text me","Go to Resources"]};}],
+  [/\b(irs|audit|letter|notice)\b/i, function(){
+    return {m:["First: don't panic, and don't respond to it yet. Most IRS letters are routine and look far scarier than they are.",
+               "Send us the letter before you do anything. Bill will review it, translate what it actually means, and handle the response with you. Can I get your number so he can reach out today?"],c:["Have Bill text me"]};}],
+  [/\b(deadline|due date|extension|when.*(file|due)|april)\b/i, function(){
+    return {m:["All the key federal and Virginia due dates are linked on our Resources page, straight from the IRS and Virginia Tax.",
+               "If you're worried about time, an extension is quick to file and buys you until October. Want Bill to look at your situation?"],c:["Book a consultation","Go to Resources"]};}],
+  [/\b(portal|upload|document|canopy|log ?in)\b/i, function(){
+    return {m:["Documents move through our secure Canopy client portal, never plain email. The Client Portal button at the top right takes you straight there.",
+               "First time using it? Bill will walk you through it in about two minutes."],c:["Have Bill text me"]};}],
+  [/\b(bookkeep|payroll|financial statement|monthly)\b/i, function(){
+    return {m:["Yes, we handle monthly bookkeeping, reconciliation, financial statements, and payroll coordination, so your books are always decision-ready.",
+               "Tell me a bit about your business and I'll flag it for Bill, or he can just give you a call."],c:["Have Bill text me","Book a consultation"]};}],
+  [/\b(llc|s.?corp|corporation|self.?employed|1099|entity|business tax)\b/i, function(){
+    return {m:["We work with LLCs, S corps, partnerships, and the self-employed, from annual returns to quarterly estimates to entity structure advice.",
+               "That last one matters more than most owners realize. The right election can save real money. Want Bill to take a look at your setup?"],c:["Book a consultation","Have Bill text me"]};}],
+  [/\b(service|offer|what do you do|help with|accounting)\b/i, function(){
+    return {m:["Four main things: individual and business tax preparation, year-round tax planning, accounting, and business advisory.",
+               "The full breakdown is on our Services page. Anything specific on your mind?"],c:["Tax prep","Tax planning","Book a consultation"]};}],
+  [/\b(tax prep|prepare|file my|return)\b/i, function(){
+    return {m:["Federal and Virginia returns, individuals and businesses, filed accurately and on time, with a prior-year review included to catch anything your last preparer missed.",
+               "Everything runs through the secure portal, so there's no paper chase. Want to get started?"],c:["Book a consultation","Have Bill text me"]};}],
+  [/\b(planning|plan ahead|estimate|quarterly)\b/i, function(){
+    return {m:["Tax planning is the part most people skip, and it's where the real savings live. Mid-year and fall check-ins, estimated payments, retirement contributions, timing decisions.",
+               "The goal: know your April number in October, and shrink it. Bill can show you what that looks like for your situation."],c:["Book a consultation"]};}],
+  [/\b(hour|open|location|address|where|office|directions)\b/i, function(){
+    return {m:["We're at 1317 Executive Blvd, Suite 110, Chesapeake, VA 23320.",
+               "Bill meets clients by appointment, and most things can also be handled by phone and the secure portal. Want me to pull up his calendar?"],c:["Book a consultation"]};}],
+  [/\b(phone|call|number|email|contact|reach)\b/i, function(){
+    return {m:["The office line is (757) 530-4075 ext. 233, and email is accounting@covatax.com.",
+               "Or leave your number right here and Bill will text you back, usually within the hour on business days."],c:["Have Bill text me"]};}],
+  [/\b(new client|switch|accepting|take.*clients|move.*(accountant|cpa|preparer))\b/i, function(){
+    return {m:["We are taking new clients, and switching is easier than most people expect. We handle the hand-off, request your prior returns, and review them for missed savings.",
+               "Most new clients are fully moved over within a week. Want Bill to reach out?"],c:["Have Bill text me","Book a consultation"]};}],
+  [/\b(thank|thanks|appreciate)\b/i, function(){
+    return {m:["You're very welcome! Anything else I can help with?"],c:["Book a consultation","That's all"]};}],
+  [/\b(bye|goodbye|later|that'?s all)\b/i, function(){
+    return {m:["Take care! We're a message away whenever you need us."]};}]
 ];
-var chatStep=0;
-function toggleChat(){document.getElementById('chatbox').classList.toggle('open')}
+function chatAnswer(t){
+  var phone=t.match(/(\+?1[\s.\-]?)?(\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4})/);
+  if(chatState.mode==='name'&&!phone){
+    chatState.name=t.replace(/^(i'?m|my name is|it'?s|this is)\s+/i,'').split(/\s+/)[0];
+    chatState.name=chatState.name.charAt(0).toUpperCase()+chatState.name.slice(1);
+    chatState.mode='phone';
+    return {m:["Nice to meet you, "+chatState.name+"! And what's the best number for Bill to text you at?"]};
+  }
+  if(phone){
+    chatState.phone=phone[2];chatState.mode=null;
+    var who=chatState.name?(", "+chatState.name):"";
+    return {m:["Perfect"+who+", you're all set. Bill will text you at "+phone[2]+" shortly, usually within the hour on business days.",
+               "Anything you'd like me to note for him before he reaches out?"]};
+  }
+  if(/have bill text me|text me|call me back/i.test(t)){
+    chatState.mode='name';
+    return {m:["Absolutely. What's your first name?"]};
+  }
+  if(/go to resources/i.test(t)){setTimeout(function(){go('resources')},900);
+    return {m:["Taking you to the Resources page now. Everything's organized by federal, Virginia, and client tools."]};}
+  for(var i=0;i<chatIntents.length;i++){
+    if(chatIntents[i][0].test(t)) return chatIntents[i][1]();
+  }
+  if(chatState.mode==='phone'){
+    return {m:["I didn't catch a phone number in that. Ten digits, any format works!"]};
+  }
+  return {m:["Good question. I'll flag that for Bill so you get a real answer instead of a guess.",
+             "What's your first name, and I'll have him text you?"],c:["Have Bill text me","Book a consultation"]};
+}
+function userSays(t){
+  chatPush('me',t);
+  var r=chatAnswer(t);
+  botSays(r.m,r.c);
+}
 function sendChat(){
   var inp=document.getElementById('chatinput');
   var t=inp.value.trim(); if(!t)return;
-  var log=document.getElementById('chatlog');
-  log.insertAdjacentHTML('beforeend','<div class="msg me"></div>');
-  log.lastChild.textContent=t;
   inp.value='';
-  setTimeout(function(){
-    log.insertAdjacentHTML('beforeend','<div class="msg them"></div>');
-    log.lastChild.textContent=chatReplies[Math.min(chatStep,chatReplies.length-1)];
-    chatStep++;
-    log.scrollTop=log.scrollHeight;
-  },700);
-  log.scrollTop=log.scrollHeight;
+  userSays(t);
 }
 
 var availDays=[4,5,6,10,11,12,13,17,18,19,20,24,25,26,27,31];
