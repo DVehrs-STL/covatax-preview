@@ -41,7 +41,11 @@
   .navlinks .btn{padding:14px 30px;font-size:15px}
   .burger{display:none;border:none;background:none;font-size:26px;color:var(--navy);cursor:pointer;padding:4px 8px}
 
-  .hero{background:linear-gradient(rgba(14,35,56,.72),rgba(22,50,79,.72)),url('https://images.unsplash.com/photo-1561728130-afd430af0493?auto=format&fit=crop&w=1900&q=70') center/cover;color:#fff;text-align:center;padding:118px 28px 126px}
+  .hero{position:relative;overflow:hidden;color:#fff;text-align:center;padding:118px 28px 126px}
+  .hero:before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(14,35,56,.72),rgba(22,50,79,.72)),url('https://images.unsplash.com/photo-1561728130-afd430af0493?auto=format&fit=crop&w=1900&q=70') center/cover;animation:kb 26s ease-in-out infinite alternate;will-change:transform}
+  .hero>*{position:relative;z-index:1}
+  @keyframes kb{from{transform:scale(1)}to{transform:scale(1.09)}}
+  @media(prefers-reduced-motion:reduce){.hero:before{animation:none}}
   .hero h1{color:#fff;font-size:clamp(36px,4.4vw,58px);line-height:1.12;max-width:900px;margin:0 auto 18px}
   .hero p{max-width:640px;margin:0 auto 34px;font-weight:300;font-size:18px;color:#e7eef5}
   .hero .cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
@@ -58,6 +62,9 @@
   section{padding:76px 0}
   .kicker{text-transform:uppercase;letter-spacing:.18em;font-size:12px;color:var(--gold);font-weight:600;margin-bottom:10px}
   .sec-h{font-size:clamp(28px,3vw,38px);margin-bottom:14px}
+  .sec-h:after{content:"";display:block;width:0;height:3px;background:var(--gold);margin-top:12px;transition:width .9s ease .35s}
+  .sec-h.in:after{width:64px}
+  .center .sec-h:after{margin-left:auto;margin-right:auto}
   .sec-sub{color:var(--gray);max-width:660px;margin-bottom:44px}
   .center{text-align:center}
   .center .sec-sub{margin-left:auto;margin-right:auto}
@@ -240,7 +247,7 @@
 
   <div class="strip">
     <div class="wrap">
-      <div><b>200+</b><span>Clients Served</span></div>
+      <div><b class="countup" data-count="200" data-suffix="+">0+</b><span>Clients Served</span></div>
       <div><b>Year-Round</b><span>Proactive Guidance</span></div>
       <div><b>Local</b><span>Chesapeake, Virginia</span></div>
       <div><b>Secure</b><span>Online Client Portal</span></div>
@@ -282,7 +289,7 @@
           <div class="bd"><h3>Tax Planning</h3><p>Know your April number in October, and shrink it.</p><span class="go">See details →</span></div>
         </div>
         <div class="imgcard" onclick="go('services')">
-          <div class="ph" style="background-image:url('https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=800&q=60')"></div>
+          <div class="ph" style="background-image:url('https://images.unsplash.com/photo-1626266061368-46a8f578ddd6?auto=format&fit=crop&w=800&q=60')"></div>
           <div class="bd"><h3>Accounting</h3><p>Books you can trust and reports you can act on.</p><span class="go">See details →</span></div>
         </div>
         <div class="imgcard" onclick="go('services')">
@@ -385,7 +392,7 @@
       <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=60" alt="Tax planning strategy">
     </div>
     <div class="svc flip">
-      <img src="https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=800&q=60" alt="Accounting services">
+      <img src="https://images.unsplash.com/photo-1626266061368-46a8f578ddd6?auto=format&fit=crop&w=800&q=60" alt="Accounting services">
       <div>
         <div class="who">For growing businesses</div>
         <h3>Accounting</h3>
@@ -874,6 +881,24 @@ function initReveals(){
   document.querySelectorAll('.rv,.rv-l,.rv-r').forEach(function(c){io.observe(c)});
 }
 initReveals();
+
+var cuIO=new IntersectionObserver(function(es){
+  es.forEach(function(e){
+    if(!e.isIntersecting)return;
+    cuIO.unobserve(e.target);
+    var el=e.target,target=parseInt(el.getAttribute('data-count'),10),suf=el.getAttribute('data-suffix')||'';
+    var t0=null;
+    function tick(ts){
+      if(!t0)t0=ts;
+      var p=Math.min((ts-t0)/1400,1);
+      p=1-Math.pow(1-p,3);
+      el.textContent=Math.round(target*p)+suf;
+      if(p<1)requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+},{threshold:0.5});
+document.querySelectorAll('.countup').forEach(function(el){cuIO.observe(el)});
 
 var heroBits=document.querySelectorAll('.hero h1,.hero p,.hero .cta');
 heroBits.forEach(function(el,i){el.classList.add('rv');el.style.setProperty('--d',(0.15+i*0.18)+'s')});
