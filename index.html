@@ -592,7 +592,11 @@ function chatChips(list){
   var box=document.createElement('div');box.className='chips';
   list.forEach(function(c){
     var b=document.createElement('button');b.className='chip';b.textContent=c;
-    b.onclick=function(){box.remove();userSays(c)};
+    b.onclick=function(){
+      box.remove();
+      if(chipActions[c]){chatPush('me',c);chipActions[c]();}
+      else userSays(c);
+    };
     box.appendChild(b);
   });
   log.appendChild(box);log.scrollTop=log.scrollHeight;
@@ -632,12 +636,26 @@ function offerText(){
   chatState.lastOffer=null;chatState.mode='name';
   return {m:["Can do. Who am I passing along to Bill? First name is fine."]};
 }
+var chipActions={
+  "Open the portal":function(){
+    window.open('https://app.canopytax.com','_blank');
+    botSays(["Opening the secure portal in a new tab for you. If it's your first visit, your login comes by email when you become a client."]);
+  }
+};
 var chatIntents=[
   [/\b(robot|a real person|human|an? ai\b|automated)\b/i, function(){
     return {m:["You got me, I'm the automated assistant. I handle the front desk stuff, and anything beyond that goes straight to Bill himself.",
                "He's the real deal though, I promise. Want me to connect you?"],c:["Set up a time with Bill","Have Bill text me"],offer:'book'};}],
   [/\bhow are you\b/i, function(){
     return {m:["Doing great, thanks for asking. What can I help you with?"]};}],
+  [/\b(who is bill|about bill|about the firm|who runs|the owner|your cpa)\b/i, function(){
+    setTimeout(function(){go('about')},2000);
+    return {m:["Bill Neice runs the firm. His clients followed him here when he opened his own doors, which tells you most of what you need to know.",
+               "Let me take you to the About page so you can meet him properly."],c:["Set up a time with Bill"]};}],
+  [/\b(what services|services do you|what do you (do|offer)|full list)\b/i, function(){
+    setTimeout(function(){go('services')},2200);
+    return {m:["Four main things: tax preparation for individuals and businesses, year-round tax planning, accounting, and business advisory.",
+               "Here, I'll take you to the Services page so you can see what's inside each one."],c:["Set up a time with Bill","Thanks"]};}],
   [/\b(hi|hello|hey|good (morning|afternoon|evening))\b/i, function(){
     return {m:["Hi there. What can I help you with today?"],c:["I need help with my taxes","What do you charge?","Set up a time with Bill"]};}],
   [/\b(price|pricing|cost|fee|charge|how much|rate)\b/i, function(){
@@ -657,7 +675,7 @@ var chatIntents=[
                "And if time is getting tight, an extension takes minutes to file and moves you to October. No shame in it, half the country does it."],c:["Go to Resources","Set up a time with Bill"],offer:'book'};}],
   [/\b(portal|upload|document|canopy|log ?in)\b/i, function(){
     return {m:["All documents go through the Canopy portal, it's encrypted end to end so nothing sensitive ever rides in a regular email.",
-               "The Client Portal button at the top right takes you there. If it's your first time, it's pretty painless, but Bill can walk you through it if you'd like."],offer:'text',c:["Have Bill text me","Got it, thanks"]};}],
+               "Want me to open it for you?"],offer:'text',c:["Open the portal","Have Bill text me"]};}],
   [/\b(bookkeep|payroll|financial statement|monthly)\b/i, function(){
     return {m:["Yep, that's a big part of what we do. Monthly bookkeeping, reconciliation, financial statements, payroll coordination, the whole back office.",
                "What kind of business are you running? That helps me point you right."]};}],
