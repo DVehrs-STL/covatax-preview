@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coastal VA Tax LLC | Tax, Accounting &amp; Advisory | Chesapeake, VA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#16324F; --navy-deep:#0E2338; --blue:#2C5F8A; --sky:#EAF1F7;
+    --sand:#F7F5F0; --gold:#B78B3E; --text:#2B2F33; --gray:#66707A; --line:#D9E2EA;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',sans-serif;color:var(--text);background:#fff;line-height:1.6}
+  h1,h2,h3{font-family:'Cormorant Garamond',serif;color:var(--navy);font-weight:600}
+  .wrap{max-width:1360px;margin:0 auto;padding:0 clamp(24px,4vw,56px)}
+  .page{display:none}
+  .page.active{display:block}
+
+  .topbar{background:var(--navy-deep);color:#cfdce8;font-size:13px;padding:7px 0}
+  .topbar .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  .topbar a{color:#fff;text-decoration:none}
+
+  nav{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:78px}
+  .brand{display:flex;align-items:center;gap:13px;cursor:pointer}
+  .brand img{height:54px}
+  .brand .word{line-height:1.1}
+  .brand .word b{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:24px;color:var(--navy);letter-spacing:.06em;display:block}
+  .brand .word span{font-size:10.5px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;font-weight:600}
+  .navlinks{display:flex;gap:28px;align-items:center}
+  .navlinks a{text-decoration:none;color:var(--navy);font-size:14.5px;font-weight:500;letter-spacing:.02em;cursor:pointer;padding:4px 0;border-bottom:2px solid transparent}
+  .navlinks a:hover{color:var(--blue)}
+  .navlinks a.on{border-bottom-color:var(--gold);color:var(--navy)}
+  .btn{display:inline-block;background:var(--navy);color:#fff !important;padding:11px 22px;border-radius:4px;font-weight:600;font-size:14px;text-decoration:none;letter-spacing:.03em;cursor:pointer;border:none;font-family:'Inter',sans-serif}
+  .btn:hover{background:var(--blue)}
+  .btn.gold{background:var(--gold)}
+  .btn.gold:hover{background:#9c7433}
+  .btn.outline{background:transparent;border:1.5px solid #fff;color:#fff !important}
+  .navlinks .btn{padding:14px 30px;font-size:15px}
+  .burger{display:none;border:none;background:none;font-size:26px;color:var(--navy);cursor:pointer;padding:4px 8px}
+
+  .hero{background:linear-gradient(rgba(14,35,56,.72),rgba(22,50,79,.72)),url('https://images.unsplash.com/photo-1561728130-afd430af0493?auto=format&fit=crop&w=1900&q=70') center/cover;color:#fff;text-align:center;padding:118px 28px 126px}
+  .hero h1{color:#fff;font-size:clamp(36px,4.4vw,58px);line-height:1.12;max-width:900px;margin:0 auto 18px}
+  .hero p{max-width:640px;margin:0 auto 34px;font-weight:300;font-size:18px;color:#e7eef5}
+  .hero .cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+  .pagehead{color:#fff;padding:84px 0 76px;background:linear-gradient(rgba(14,35,56,.74),rgba(22,50,79,.74)),var(--ph) center/cover}
+  .pagehead h1{font-size:clamp(34px,3.6vw,48px);margin-bottom:8px;color:#fff}
+  .pagehead p{color:#dce7f0;max-width:660px}
+
+  .strip{background:var(--sky);padding:24px 0}
+  .strip .wrap{display:flex;justify-content:space-around;flex-wrap:wrap;gap:12px;text-align:center}
+  .strip b{color:var(--navy);font-size:16px}
+  .strip span{display:block;font-size:12.5px;color:var(--gray);letter-spacing:.04em;text-transform:uppercase;margin-top:2px}
+
+  section{padding:76px 0}
+  .kicker{text-transform:uppercase;letter-spacing:.18em;font-size:12px;color:var(--gold);font-weight:600;margin-bottom:10px}
+  .sec-h{font-size:clamp(28px,3vw,38px);margin-bottom:14px}
+  .sec-sub{color:var(--gray);max-width:660px;margin-bottom:44px}
+  .center{text-align:center}
+  .center .sec-sub{margin-left:auto;margin-right:auto}
+
+  .imgcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:26px}
+  .imgcard{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;transition:box-shadow .2s, transform .2s;cursor:pointer}
+  .imgcard:hover{box-shadow:0 14px 36px rgba(22,50,79,.14);transform:translateY(-4px)}
+  .imgcard .ph{height:170px;background:var(--sky) center/cover}
+  .imgcard .bd{padding:22px 24px 26px}
+  .imgcard h3{font-size:22px;margin-bottom:6px}
+  .imgcard p{font-size:14px;color:var(--gray)}
+  .imgcard .go{display:inline-block;margin-top:12px;color:var(--blue);font-size:13.5px;font-weight:600}
+
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+  .split img{width:100%;border-radius:8px;box-shadow:0 18px 44px rgba(22,50,79,.18)}
+  .split p{color:var(--gray);margin-bottom:14px}
+  .check{list-style:none;margin:18px 0 26px}
+  .check li{padding:7px 0 7px 30px;position:relative;font-size:15px}
+  .check li:before{content:"✓";position:absolute;left:0;color:var(--gold);font-weight:700}
+  .sand{background:var(--sand)}
+  .skybg{background:var(--sky)}
+
+  .quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:26px}
+  .quote{background:#fff;border:1px solid var(--line);border-radius:8px;padding:30px 28px}
+  .quote .stars{color:var(--gold);letter-spacing:2px;margin-bottom:12px}
+  .quote p{font-size:15px;color:var(--text);font-style:italic;margin-bottom:16px}
+  .quote b{font-size:13.5px;color:var(--navy)}
+  .quote span{display:block;font-size:12.5px;color:var(--gray)}
+
+  .svc{display:grid;grid-template-columns:1fr 340px;gap:44px;padding:44px 0;border-bottom:1px solid var(--line);align-items:center}
+  .svc:last-child{border-bottom:none}
+  .svc.flip{grid-template-columns:340px 1fr}
+  .svc img{width:100%;height:220px;object-fit:cover;border-radius:8px;box-shadow:0 12px 30px rgba(22,50,79,.14)}
+  .svc h3{font-size:26px;margin-bottom:8px}
+  .svc p{color:var(--gray);font-size:15px;max-width:720px}
+  .svc .who{font-size:12.5px;color:var(--gold);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+  .svc ul{list-style:none;margin-top:12px}
+  .svc ul li{font-size:14px;padding:4px 0 4px 26px;position:relative;color:var(--text)}
+  .svc ul li:before{content:"✓";position:absolute;left:0;color:var(--gold);font-weight:700}
+
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:24px;counter-reset:step}
+  .step{background:#fff;border:1px solid var(--line);border-radius:8px;padding:28px 26px;position:relative}
+  .step .num{width:38px;height:38px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:16px;margin-bottom:16px}
+  .step h3{font-size:20px;margin-bottom:6px}
+  .step p{font-size:13.5px;color:var(--gray)}
+
+  .faq{max-width:860px}
+  .faq-item{border:1px solid var(--line);border-radius:8px;margin-bottom:12px;overflow:hidden;background:#fff}
+  .faq-q{width:100%;text-align:left;border:none;background:#fff;padding:18px 22px;font-size:15.5px;font-weight:600;color:var(--navy);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Inter',sans-serif}
+  .faq-q span{font-size:20px;color:var(--gold);transition:transform .2s}
+  .faq-item.open .faq-q span{transform:rotate(45deg)}
+  .faq-a{display:none;padding:0 22px 18px;color:var(--gray);font-size:14.5px}
+  .faq-item.open .faq-a{display:block}
+
+  .about-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:60px;align-items:center}
+  .about-grid img{width:100%;border-radius:8px;box-shadow:0 18px 44px rgba(22,50,79,.18)}
+  .about-grid p{color:var(--gray);margin-bottom:16px}
+
+  .portalband{background:linear-gradient(rgba(14,35,56,.88),rgba(22,50,79,.88)),url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=60') center/cover;color:#fff;text-align:center}
+  .portalband h2{color:#fff;font-size:34px;margin-bottom:12px}
+  .portalband p{color:#c9d8e4;max-width:560px;margin:0 auto 28px}
+
+  .ctaband{background:linear-gradient(rgba(183,139,62,.14),rgba(183,139,62,.14)),var(--sand);text-align:center}
+  .ctaband h2{font-size:clamp(28px,3vw,38px);margin-bottom:10px}
+  .ctaband p{color:var(--gray);max-width:560px;margin:0 auto 28px}
+
+  .resgroup{margin-bottom:40px}
+  .resgroup h3{font-size:24px;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--sky)}
+  .reslink{display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border:1px solid var(--line);border-radius:8px;margin-bottom:10px;text-decoration:none;color:var(--text);font-size:14.5px;transition:border-color .15s, background .15s}
+  .reslink:hover{border-color:var(--blue);background:var(--sky)}
+  .reslink b{color:var(--navy);font-weight:600}
+  .reslink span{color:var(--gray);font-size:12.5px}
+  .reslink .go{color:var(--blue);font-weight:600;font-size:13px;white-space:nowrap;margin-left:14px}
+
+  footer{background:var(--navy-deep);color:#9fb2c2;padding:52px 0 26px;font-size:14px}
+  footer .wrap{display:grid;grid-template-columns:1.6fr 1.3fr 1fr 1fr;gap:44px}
+  footer h4{color:#fff;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px;font-family:'Inter',sans-serif}
+  footer a{color:#c8d6e2;text-decoration:none;display:block;margin-bottom:9px;cursor:pointer}
+  .foot-bottom{border-top:1px solid rgba(255,255,255,.12);margin-top:40px;padding-top:20px;text-align:center;font-size:12.5px;color:#7c8fa0}
+
+  .chat-fab{position:fixed;bottom:26px;right:26px;width:58px;height:58px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.28);cursor:pointer;z-index:99;font-size:24px;border:none}
+  .chat-fab:hover{transform:scale(1.06)}
+  .chatbox{position:fixed;bottom:96px;right:26px;width:330px;background:#fff;border-radius:12px;box-shadow:0 16px 48px rgba(0,0,0,.25);z-index:99;display:none;overflow:hidden;border:1px solid var(--line)}
+  .chatbox.open{display:block}
+  .chathead{background:var(--navy);color:#fff;padding:14px 18px;font-weight:600;font-size:14.5px}
+  .chathead small{display:block;font-weight:400;font-size:12px;color:#c9d8e4}
+  .chatlog{padding:14px;height:230px;overflow-y:auto;background:var(--sky);display:flex;flex-direction:column;gap:8px}
+  .msg{max-width:82%;padding:9px 13px;border-radius:12px;font-size:13.5px;line-height:1.45}
+  .msg.them{background:#fff;border:1px solid var(--line);border-bottom-left-radius:3px;align-self:flex-start}
+  .msg.me{background:var(--navy);color:#fff;border-bottom-right-radius:3px;align-self:flex-end}
+  .chatin{display:flex;border-top:1px solid var(--line)}
+  .chatin input{flex:1;border:none;padding:12px 14px;font-size:13.5px;outline:none;font-family:'Inter',sans-serif}
+  .chatin button{border:none;background:var(--gold);color:#fff;padding:0 18px;font-weight:600;cursor:pointer;font-size:13.5px}
+
+  .modal-bg{position:fixed;inset:0;background:rgba(14,35,56,.55);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+  .modal-bg.open{display:flex}
+  .modal{background:#fff;border-radius:12px;max-width:520px;width:100%;padding:30px 32px;box-shadow:0 24px 64px rgba(0,0,0,.3);max-height:90vh;overflow-y:auto}
+  .modal h3{font-size:26px;margin-bottom:4px}
+  .modal .sub{color:var(--gray);font-size:13.5px;margin-bottom:18px}
+  .cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-weight:600;color:var(--navy)}
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:16px}
+  .cal .dow{font-size:11px;color:var(--gray);text-align:center;text-transform:uppercase;letter-spacing:.06em;padding:4px 0}
+  .day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:14px;color:#b6bec5}
+  .day.avail{background:var(--sky);color:var(--navy);font-weight:600;cursor:pointer;border:1px solid transparent}
+  .day.avail:hover{border-color:var(--blue)}
+  .day.sel{background:var(--navy);color:#fff}
+  .slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+  .slot{padding:10px 0;text-align:center;border:1px solid var(--line);border-radius:6px;font-size:13.5px;cursor:pointer;color:var(--navy);font-weight:500}
+  .slot:hover{border-color:var(--blue);background:var(--sky)}
+  .slot.sel{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .book-form input{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:6px;font-size:14px;margin-bottom:10px;font-family:'Inter',sans-serif}
+  .confirm{background:#EAF6EC;border:1px solid #BFE3C6;border-radius:8px;padding:18px;text-align:center;color:#1F6F25;font-size:14.5px;display:none}
+  .modal .close{float:right;border:none;background:none;font-size:22px;color:var(--gray);cursor:pointer;line-height:1}
+  .demo-note{font-size:11.5px;color:var(--gray);text-align:center;margin-top:12px}
+
+  .rv{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.22,.61,.36,1),transform .7s cubic-bezier(.22,.61,.36,1);transition-delay:var(--d,0s)}
+  .rv.in{opacity:1;transform:none}
+  .rv-l{opacity:0;transform:translateX(-36px);transition:opacity .8s cubic-bezier(.22,.61,.36,1),transform .8s cubic-bezier(.22,.61,.36,1);transition-delay:var(--d,0s)}
+  .rv-l.in{opacity:1;transform:none}
+  .rv-r{opacity:0;transform:translateX(36px);transition:opacity .8s cubic-bezier(.22,.61,.36,1),transform .8s cubic-bezier(.22,.61,.36,1);transition-delay:var(--d,0s)}
+  .rv-r.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.rv,.rv-l,.rv-r{opacity:1 !important;transform:none !important;transition:none !important}}
+
+  @media(min-width:1800px){.wrap{max-width:1600px}}
+  @media(max-width:860px){
+    .burger{display:block}
+    .navlinks{display:none;position:absolute;top:78px;left:0;right:0;background:#fff;border-bottom:1px solid var(--line);flex-direction:column;align-items:flex-start;padding:16px 28px;gap:16px;box-shadow:0 12px 24px rgba(22,50,79,.12)}
+    .navlinks.open{display:flex}
+    .split,.about-grid,footer .wrap{grid-template-columns:1fr}
+    .svc,.svc.flip{grid-template-columns:1fr}
+    .svc img{order:-1}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div>1317 Executive Blvd, Ste 110 &nbsp;·&nbsp; Chesapeake, VA 23320</div>
+    <div><a href="tel:7575304075">(757) 530-4075</a> &nbsp;·&nbsp; <a href="mailto:accounting@covatax.com">accounting@covatax.com</a></div>
+  </div>
+</div>
+
+<nav>
+  <div class="wrap">
+    <div class="brand" onclick="go('home')">
+      <img src="covatax_mark.png" alt="Coastal VA Tax lighthouse mark">
+      <div class="word"><b>Coastal VA Tax</b><span>Tax · Accounting · Advisory</span></div>
+    </div>
+    <div class="navlinks">
+      <a id="nl-home" class="on" onclick="go('home')">Home</a>
+      <a id="nl-services" onclick="go('services')">Services</a>
+      <a id="nl-about" onclick="go('about')">About</a>
+      <a id="nl-resources" onclick="go('resources')">Resources</a>
+      <a class="btn" href="https://app.canopytax.com" target="_blank" rel="noopener">Client Portal</a>
+    </div>
+    <button class="burger" onclick="document.querySelector('.navlinks').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+  </div>
+</nav>
+
+<!-- ============ HOME ============ -->
+<div class="page active" id="pg-home">
+  <header class="hero">
+    <h1>Steady Guidance Through Every Tax Season</h1>
+    <p>Coastal VA Tax LLC provides accurate, timely tax preparation, accounting, and business advisory services to individuals and businesses across Hampton Roads.</p>
+    <div class="cta">
+      <button class="btn gold" onclick="openBook()">Schedule a Consultation</button>
+      <a class="btn outline" onclick="go('services')">Explore Our Services</a>
+    </div>
+  </header>
+
+  <div class="strip">
+    <div class="wrap">
+      <div><b>200+</b><span>Clients Served</span></div>
+      <div><b>Year-Round</b><span>Proactive Guidance</span></div>
+      <div><b>Local</b><span>Chesapeake, Virginia</span></div>
+      <div><b>Secure</b><span>Online Client Portal</span></div>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="split">
+        <div>
+          <div class="kicker">Why Coastal VA Tax</div>
+          <h2 class="sec-h">Your Taxes, Handled. Your Time, Back.</h2>
+          <p>Most people dread tax season. Our clients don't, because by the time April arrives, the plan has been in place for months. We work year-round so filing day is just a formality.</p>
+          <ul class="check">
+            <li>A real person who knows your full financial picture</li>
+            <li>Proactive check-ins before deadlines, not after</li>
+            <li>Secure digital document handling, no paper chase</li>
+            <li>Flat, transparent pricing discussed up front</li>
+          </ul>
+          <button class="btn" onclick="go('about')">Get to Know the Firm →</button>
+        </div>
+        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1000&q=70" alt="Tax preparation in Chesapeake VA">
+      </div>
+    </div>
+  </section>
+
+  <section class="skybg">
+    <div class="wrap center">
+      <div class="kicker">What We Do</div>
+      <h2 class="sec-h">One Firm for the Whole Financial Picture</h2>
+      <p class="sec-sub">Four ways we help, all under one roof. Every engagement starts with a conversation, not a form.</p>
+      <div class="imgcards">
+        <div class="imgcard" onclick="go('services')">
+          <div class="ph" style="background-image:url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=60')"></div>
+          <div class="bd"><h3>Tax Preparation</h3><p>Filed right, filed on time, with nothing left on the table.</p><span class="go">See details →</span></div>
+        </div>
+        <div class="imgcard" onclick="go('services')">
+          <div class="ph" style="background-image:url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=60')"></div>
+          <div class="bd"><h3>Tax Planning</h3><p>Know your April number in October, and shrink it.</p><span class="go">See details →</span></div>
+        </div>
+        <div class="imgcard" onclick="go('services')">
+          <div class="ph" style="background-image:url('https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=800&q=60')"></div>
+          <div class="bd"><h3>Accounting</h3><p>Books you can trust and reports you can act on.</p><span class="go">See details →</span></div>
+        </div>
+        <div class="imgcard" onclick="go('services')">
+          <div class="ph" style="background-image:url('https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=60')"></div>
+          <div class="bd"><h3>Business Advisory</h3><p>A sounding board for every money decision you make.</p><span class="go">See details →</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap center">
+      <div class="kicker">Client Experiences</div>
+      <h2 class="sec-h">Trusted Across Hampton Roads</h2>
+      <div class="quotes" style="margin-top:40px">
+        <div class="quote">
+          <div class="stars">★★★★★</div>
+          <p>"Bill has done our taxes for years. When he opened his own firm, following him was the easiest decision we made all year."</p>
+          <b>Longtime Client</b><span>Chesapeake, VA</span>
+        </div>
+        <div class="quote">
+          <div class="stars">★★★★★</div>
+          <p>"He caught things our old preparer missed two years running. Responsive, thorough, and straight with you about what things cost."</p>
+          <b>Small Business Owner</b><span>Virginia Beach, VA</span>
+        </div>
+        <div class="quote">
+          <div class="stars">★★★★★</div>
+          <p>"The portal makes everything painless. I upload my documents, Bill handles the rest, and I get a text when it's done."</p>
+          <b>Individual Client</b><span>Norfolk, VA</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="portalband">
+    <div class="wrap">
+      <h2>Secure Client Portal</h2>
+      <p>Upload documents, review returns, and message the firm securely from anywhere, through our encrypted Canopy client portal.</p>
+      <a class="btn gold" href="https://app.canopytax.com" target="_blank" rel="noopener">Access Your Portal</a>
+    </div>
+  </section>
+
+  <section class="ctaband">
+    <div class="wrap">
+      <h2>Ready to Take Taxes Off Your Plate?</h2>
+      <p>Thirty minutes with Bill, free of charge. Bring your questions, leave with a plan.</p>
+      <button class="btn gold" onclick="openBook()">Schedule a Consultation</button>
+    </div>
+  </section>
+</div>
+
+<!-- ============ SERVICES ============ -->
+<div class="page" id="pg-services">
+  <div class="pagehead" style="--ph:url('https://images.unsplash.com/photo-1567565890176-80ec662d62de?auto=format&fit=crop&w=1600&q=60')"><div class="wrap">
+    <div class="kicker" style="color:#d9b877">Services</div>
+    <h1>What We Do, In Detail</h1>
+    <p>Every engagement is personal. Here is the full picture of how Coastal VA Tax supports individuals and businesses across Hampton Roads.</p>
+  </div></div>
+  <section><div class="wrap">
+    <div class="svc">
+      <div>
+        <div class="who">For individuals &amp; families</div>
+        <h3>Individual Tax Preparation</h3>
+        <p>Federal and Virginia returns prepared accurately and filed on time, with every credit and deduction you are entitled to.</p>
+        <ul>
+          <li>Federal &amp; Virginia state returns</li>
+          <li>Itemized deduction review, every year</li>
+          <li>Secure portal upload, no paperwork drop-offs</li>
+          <li>Prior-year return review for missed savings</li>
+        </ul>
+      </div>
+      <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=60" alt="Individual tax preparation">
+    </div>
+    <div class="svc flip">
+      <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=60" alt="Business tax preparation">
+      <div>
+        <div class="who">For business owners</div>
+        <h3>Business Tax Preparation</h3>
+        <p>Returns for LLCs, S corps, partnerships, and sole proprietors, prepared with an eye toward the year ahead, not just the one behind you.</p>
+        <ul>
+          <li>LLC, S corp, partnership &amp; Schedule C returns</li>
+          <li>Quarterly estimated payment schedules</li>
+          <li>Owner compensation &amp; distribution review</li>
+          <li>State &amp; local filing compliance</li>
+        </ul>
+      </div>
+    </div>
+    <div class="svc">
+      <div>
+        <div class="who">For anyone tired of April surprises</div>
+        <h3>Tax Planning</h3>
+        <p>Proactive, year-round strategy that minimizes surprises. Estimated payments, entity elections, retirement contributions, and timing decisions, all mapped out in advance.</p>
+        <ul>
+          <li>Mid-year and fall planning sessions</li>
+          <li>Entity election analysis (S corp vs. LLC)</li>
+          <li>Retirement &amp; HSA contribution strategy</li>
+          <li>Projected April number, months early</li>
+        </ul>
+      </div>
+      <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=60" alt="Tax planning strategy">
+    </div>
+    <div class="svc flip">
+      <img src="https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=800&q=60" alt="Accounting services">
+      <div>
+        <div class="who">For growing businesses</div>
+        <h3>Accounting</h3>
+        <p>Clean books, clear monthly reporting, and reliable financials that give you confidence in every decision. We keep the numbers straight so you can run the business.</p>
+        <ul>
+          <li>Monthly bookkeeping &amp; reconciliation</li>
+          <li>Financial statements you can read</li>
+          <li>Payroll coordination</li>
+          <li>Year-end close, handled early</li>
+        </ul>
+      </div>
+    </div>
+    <div class="svc">
+      <div>
+        <div class="who">For owners planning ahead</div>
+        <h3>Business Advisory</h3>
+        <p>Entity structure, growth planning, cash flow, and the questions that come up in between. Practical guidance from someone who knows your full financial picture.</p>
+        <ul>
+          <li>Entity formation &amp; structure guidance</li>
+          <li>Cash flow &amp; growth planning</li>
+          <li>Major purchase &amp; hiring decisions</li>
+          <li>A direct line when questions come up</li>
+        </ul>
+      </div>
+      <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=60" alt="Business advisory handshake">
+    </div>
+  </div></section>
+
+  <section class="skybg"><div class="wrap center">
+    <div class="kicker">Getting Started</div>
+    <h2 class="sec-h">How It Works</h2>
+    <p class="sec-sub">Four steps from first call to filed return. Simple on purpose.</p>
+    <div class="steps" style="text-align:left">
+      <div class="step"><div class="num">1</div><h3>Talk</h3><p>A free 30-minute consultation, by phone or in office. We learn your situation and quote a flat price up front.</p></div>
+      <div class="step"><div class="num">2</div><h3>Upload</h3><p>You upload documents through the secure Canopy portal. No printing, no drop-offs, no email attachments.</p></div>
+      <div class="step"><div class="num">3</div><h3>We Prepare</h3><p>Your return is prepared and double-checked, with questions handled by message or a quick call.</p></div>
+      <div class="step"><div class="num">4</div><h3>Review &amp; File</h3><p>You review and e-sign from any device. We file, confirm acceptance, and text you when it's done.</p></div>
+    </div>
+    <div style="margin-top:40px"><button class="btn gold" onclick="openBook()">Start with a Free Consultation</button></div>
+  </div></section>
+
+  <section><div class="wrap">
+    <div class="kicker">Common Questions</div>
+    <h2 class="sec-h">Frequently Asked</h2>
+    <div class="faq" style="margin-top:30px">
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">What do your services cost?<span>+</span></button><div class="faq-a">Pricing is flat and quoted up front after your free consultation, based on the complexity of your situation. No hourly surprises, no bill creep.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can you take over from my current preparer mid-year?<span>+</span></button><div class="faq-a">Yes. We handle the transition, including requesting prior-year returns and reviewing them for anything that was missed.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Do I have to come into the office?<span>+</span></button><div class="faq-a">Only if you want to. Most clients handle everything through the secure portal and a phone call. In-office appointments are always available.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">What if I get a letter from the IRS?<span>+</span></button><div class="faq-a">Send it to us first, before you panic and before you respond. We review it, explain what it actually means, and handle the response with you.</div></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ============ ABOUT ============ -->
+<div class="page" id="pg-about">
+  <div class="pagehead" style="--ph:url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=60')"><div class="wrap">
+    <div class="kicker" style="color:#d9b877">About the Firm</div>
+    <h1>Professional Expertise, Coastal Calm</h1>
+  </div></div>
+  <section><div class="wrap">
+    <div class="about-grid">
+      <div>
+        <p>At Coastal VA Tax LLC, we blend professional expertise with a calm coastal spirit. When the firm opened its doors, our clients came with us, because we take the time to understand their full picture, not just their paperwork.</p>
+        <p>Led by Bill Neice, the firm serves individuals and businesses throughout Chesapeake and greater Hampton Roads with tax, accounting, and advisory services built on accuracy, responsiveness, and trust.</p>
+        <p>We believe good tax work is a year-round conversation, not a once-a-year scramble. That is why clients hear from us before deadlines, not after them.</p>
+        <button class="btn" onclick="openBook()">Meet with Bill →</button>
+      </div>
+      <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=900&q=70" alt="Bill Neice, Coastal VA Tax">
+    </div>
+  </div></section>
+  <section class="sand"><div class="wrap">
+    <div class="kicker">How We Work</div>
+    <h2 class="sec-h">The Coastal VA Tax Approach</h2>
+    <div class="imgcards" style="margin-top:36px">
+      <div class="imgcard" style="cursor:default">
+        <div class="ph" style="background-image:url('https://images.unsplash.com/photo-1423666639041-f56000c27a9a?auto=format&fit=crop&w=800&q=60')"></div>
+        <div class="bd"><h3>Responsive</h3><p>Calls and messages returned promptly. You will never wonder where your return stands.</p></div>
+      </div>
+      <div class="imgcard" style="cursor:default">
+        <div class="ph" style="background-image:url('https://images.unsplash.com/photo-1506784365847-bbad939e9335?auto=format&fit=crop&w=800&q=60')"></div>
+        <div class="bd"><h3>Proactive</h3><p>We reach out before deadlines with what you need, so nothing sneaks up on you.</p></div>
+      </div>
+      <div class="imgcard" style="cursor:default">
+        <div class="ph" style="background-image:url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=800&q=60')"></div>
+        <div class="bd"><h3>Secure</h3><p>All documents move through the encrypted Canopy portal, never over plain email.</p></div>
+      </div>
+    </div>
+  </div></section>
+  <section class="ctaband"><div class="wrap">
+    <h2>Come Say Hello</h2>
+    <p>1317 Executive Blvd, Suite 110, Chesapeake. Or start with a free phone consultation.</p>
+    <button class="btn gold" onclick="openBook()">Schedule a Consultation</button>
+  </div></section>
+</div>
+
+<!-- ============ RESOURCES ============ -->
+<div class="page" id="pg-resources">
+  <div class="pagehead" style="--ph:url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1600&q=60')"><div class="wrap">
+    <div class="kicker" style="color:#d9b877">Client Resources</div>
+    <h1>Deadlines &amp; Helpful Links</h1>
+    <p>The sites we point clients to most, all in one place and kept current.</p>
+  </div></div>
+  <section><div class="wrap">
+    <div class="resgroup">
+      <h3>Federal — IRS</h3>
+      <a class="reslink" href="https://www.irs.gov/payments" target="_blank" rel="noopener"><span><b>IRS Direct Pay</b><br><span>Pay federal taxes directly from your bank account</span></span><span class="go">Visit →</span></a>
+      <a class="reslink" href="https://www.irs.gov/refunds" target="_blank" rel="noopener"><span><b>Where's My Refund?</b><br><span>Track the status of your federal refund</span></span><span class="go">Visit →</span></a>
+      <a class="reslink" href="https://www.irs.gov/filing/individuals/when-to-file" target="_blank" rel="noopener"><span><b>Federal Filing Deadlines</b><br><span>Key IRS due dates for the current tax year</span></span><span class="go">Visit →</span></a>
+    </div>
+    <div class="resgroup">
+      <h3>Virginia</h3>
+      <a class="reslink" href="https://www.tax.virginia.gov/payments" target="_blank" rel="noopener"><span><b>Virginia Tax Payments</b><br><span>Pay state income and estimated taxes online</span></span><span class="go">Visit →</span></a>
+      <a class="reslink" href="https://www.tax.virginia.gov/wheres-my-refund" target="_blank" rel="noopener"><span><b>Virginia Refund Status</b><br><span>Check your state refund</span></span><span class="go">Visit →</span></a>
+    </div>
+    <div class="resgroup">
+      <h3>Client Tools</h3>
+      <a class="reslink" href="https://app.canopytax.com" target="_blank" rel="noopener"><span><b>Canopy Client Portal</b><br><span>Upload documents and message the firm securely</span></span><span class="go">Visit →</span></a>
+      <a class="reslink" onclick="openBook();return false" href="#"><span><b>Schedule a Consultation</b><br><span>Book time with Bill directly</span></span><span class="go">Book →</span></a>
+    </div>
+  </div></section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <h4>Coastal VA Tax LLC</h4>
+      <p>1317 Executive Blvd, Ste 110<br>Chesapeake, VA 23320<br><br>(757) 530-4075 ext. 233<br>accounting@covatax.com</p>
+    </div>
+    <div>
+      <h4>Resources</h4>
+      <a href="https://www.irs.gov/payments" target="_blank" rel="noopener">IRS Direct Pay</a>
+      <a href="https://www.irs.gov/refunds" target="_blank" rel="noopener">Where's My Refund?</a>
+      <a href="https://www.irs.gov/filing/individuals/when-to-file" target="_blank" rel="noopener">Federal Filing Deadlines</a>
+      <a href="https://www.tax.virginia.gov/payments" target="_blank" rel="noopener">Virginia Tax Payments</a>
+      <a href="https://www.tax.virginia.gov/wheres-my-refund" target="_blank" rel="noopener">Virginia Refund Status</a>
+      <a href="https://app.canopytax.com" target="_blank" rel="noopener">Client Portal</a>
+    </div>
+    <div>
+      <h4>Navigate</h4>
+      <a onclick="go('home')">Home</a><a onclick="go('services')">Services</a><a onclick="go('about')">About</a><a onclick="go('resources')">Resources</a>
+    </div>
+    <div>
+      <h4>Legal</h4>
+      <a>Privacy Policy</a><a>Terms of Use</a><a>Cookie Policy</a>
+    </div>
+  </div>
+  <div class="foot-bottom">© 2026 Coastal VA Tax LLC. All rights reserved. &nbsp;·&nbsp; Site by Vehrs Media</div>
+</footer>
+
+<div class="chatbox" id="chatbox">
+  <div class="chathead">Coastal VA Tax<small>We typically reply within the hour</small></div>
+  <div class="chatlog" id="chatlog">
+    <div class="msg them">Hi there! 👋 How can we help you today? Ask about our services or leave your number and Bill will text you back.</div>
+  </div>
+  <div class="chatin">
+    <input id="chatinput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button onclick="sendChat()">Send</button>
+  </div>
+</div>
+<button class="chat-fab" onclick="toggleChat()" aria-label="Chat with us">💬</button>
+
+<div class="modal-bg" id="bookmodal">
+  <div class="modal">
+    <button class="close" onclick="closeBook()">×</button>
+    <h3>Schedule a Consultation</h3>
+    <div class="sub">Pick a day and time that works for you. 30 minutes, free of charge, by phone or in office.</div>
+    <div id="bookflow">
+      <div class="cal-head"><span>August 2026</span></div>
+      <div class="cal" id="cal"></div>
+      <div id="slotwrap" style="display:none">
+        <div style="font-weight:600;color:var(--navy);font-size:14px;margin-bottom:8px" id="sloth"></div>
+        <div class="slots" id="slots"></div>
+      </div>
+      <div id="formwrap" style="display:none" class="book-form">
+        <input id="bname" placeholder="Your name">
+        <input id="bphone" placeholder="Phone number">
+        <button class="btn gold" style="width:100%" onclick="confirmBook()">Confirm Appointment</button>
+      </div>
+    </div>
+    <div class="confirm" id="bookconfirm"></div>
+    <div class="demo-note">Design preview — live version connects to Bill's real calendar availability.</div>
+  </div>
+</div>
+
+<script>
+function go(p){
+  document.querySelector('.navlinks').classList.remove('open');
+  document.querySelectorAll('.page').forEach(function(el){el.classList.remove('active')});
+  document.getElementById('pg-'+p).classList.add('active');
+  document.querySelectorAll('.navlinks a').forEach(function(el){el.classList.remove('on')});
+  var nl=document.getElementById('nl-'+p); if(nl)nl.classList.add('on');
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+var chatReplies=[
+  "Thanks for reaching out! Can I grab your name and the best number to text you back on?",
+  "Perfect, got it. Bill will text you back shortly — usually within the hour during business days.",
+  "Anything else I can note for Bill before he reaches out?"
+];
+var chatStep=0;
+function toggleChat(){document.getElementById('chatbox').classList.toggle('open')}
+function sendChat(){
+  var inp=document.getElementById('chatinput');
+  var t=inp.value.trim(); if(!t)return;
+  var log=document.getElementById('chatlog');
+  log.insertAdjacentHTML('beforeend','<div class="msg me"></div>');
+  log.lastChild.textContent=t;
+  inp.value='';
+  setTimeout(function(){
+    log.insertAdjacentHTML('beforeend','<div class="msg them"></div>');
+    log.lastChild.textContent=chatReplies[Math.min(chatStep,chatReplies.length-1)];
+    chatStep++;
+    log.scrollTop=log.scrollHeight;
+  },700);
+  log.scrollTop=log.scrollHeight;
+}
+
+var availDays=[4,5,6,10,11,12,13,17,18,19,20,24,25,26,27,31];
+var pickedDay=null,pickedSlot=null;
+function buildCal(){
+  var cal=document.getElementById('cal');
+  var dows=['Su','Mo','Tu','We','Th','Fr','Sa'];
+  var html='';
+  dows.forEach(function(d){html+='<div class="dow">'+d+'</div>'});
+  var first=6;
+  for(var i=0;i<first;i++)html+='<div></div>';
+  for(var d=1;d<=31;d++){
+    var cls=availDays.indexOf(d)>=0?'day avail':'day';
+    html+='<div class="'+cls+'" data-d="'+d+'" onclick="pickDay(this)">'+d+'</div>';
+  }
+  cal.innerHTML=html;
+}
+function pickDay(el){
+  if(!el.classList.contains('avail'))return;
+  document.querySelectorAll('.day').forEach(function(x){x.classList.remove('sel')});
+  el.classList.add('sel');
+  pickedDay=el.getAttribute('data-d');
+  document.getElementById('slotwrap').style.display='block';
+  document.getElementById('sloth').textContent='Available times — August '+pickedDay;
+  var slots=['9:00 AM','10:30 AM','1:00 PM','2:30 PM','4:00 PM'];
+  var s='';
+  slots.forEach(function(t){s+='<div class="slot" onclick="pickSlot(this)">'+t+'</div>'});
+  document.getElementById('slots').innerHTML=s;
+  document.getElementById('formwrap').style.display='none';
+}
+function pickSlot(el){
+  document.querySelectorAll('.slot').forEach(function(x){x.classList.remove('sel')});
+  el.classList.add('sel');
+  pickedSlot=el.textContent;
+  document.getElementById('formwrap').style.display='block';
+}
+function confirmBook(){
+  var n=document.getElementById('bname').value.trim()||'there';
+  document.getElementById('bookflow').style.display='none';
+  var c=document.getElementById('bookconfirm');
+  c.style.display='block';
+  c.textContent='✓ You\'re all set, '+n+'. Bill will see you August '+pickedDay+' at '+pickedSlot+'. A confirmation text is on its way.';
+}
+function openBook(){
+  document.getElementById('bookmodal').classList.add('open');
+  document.getElementById('bookflow').style.display='block';
+  document.getElementById('bookconfirm').style.display='none';
+  document.getElementById('slotwrap').style.display='none';
+  document.getElementById('formwrap').style.display='none';
+  buildCal();
+}
+function closeBook(){document.getElementById('bookmodal').classList.remove('open')}
+document.getElementById('bookmodal').addEventListener('click',function(e){if(e.target===this)closeBook()});
+
+var io=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}
+  });
+},{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+
+function initReveals(){
+  document.querySelectorAll('.imgcards').forEach(function(g){
+    Array.prototype.forEach.call(g.children,function(c,i){c.classList.add('rv');c.style.setProperty('--d',(i*0.12)+'s')});
+  });
+  document.querySelectorAll('.quotes').forEach(function(g){
+    Array.prototype.forEach.call(g.children,function(c,i){c.classList.add('rv');c.style.setProperty('--d',(i*0.15)+'s')});
+  });
+  document.querySelectorAll('.steps').forEach(function(g){
+    Array.prototype.forEach.call(g.children,function(c,i){c.classList.add('rv');c.style.setProperty('--d',(i*0.12)+'s')});
+  });
+  document.querySelectorAll('.strip .wrap').forEach(function(g){
+    Array.prototype.forEach.call(g.children,function(c,i){c.classList.add('rv');c.style.setProperty('--d',(i*0.1)+'s')});
+  });
+  document.querySelectorAll('.split').forEach(function(s){
+    Array.prototype.forEach.call(s.children,function(c,i){c.classList.add(i%2?'rv-r':'rv-l')});
+  });
+  document.querySelectorAll('.svc').forEach(function(s){
+    var flip=s.classList.contains('flip');
+    Array.prototype.forEach.call(s.children,function(c,i){
+      var left=(i===0)!==flip;
+      c.classList.add(left?'rv-l':'rv-r');
+    });
+  });
+  document.querySelectorAll('.about-grid').forEach(function(s){
+    Array.prototype.forEach.call(s.children,function(c,i){c.classList.add(i%2?'rv-r':'rv-l')});
+  });
+  document.querySelectorAll('.sec-h,.sec-sub,.kicker,.faq-item,.resgroup,.ctaband h2,.ctaband p,.portalband h2,.portalband p').forEach(function(c){c.classList.add('rv')});
+  document.querySelectorAll('.rv,.rv-l,.rv-r').forEach(function(c){io.observe(c)});
+}
+initReveals();
+
+var heroBits=document.querySelectorAll('.hero h1,.hero p,.hero .cta');
+heroBits.forEach(function(el,i){el.classList.add('rv');el.style.setProperty('--d',(0.15+i*0.18)+'s')});
+setTimeout(function(){heroBits.forEach(function(el){el.classList.add('in')})},80);
+</script>
+
+</body>
+</html>
