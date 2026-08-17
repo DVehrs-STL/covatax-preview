@@ -475,6 +475,13 @@
       </div>
     </div>
   </div></section>
+  <section><div class="wrap">
+    <div class="kicker">Find Us</div>
+    <h2 class="sec-h">Right Off the 168 in Chesapeake</h2>
+    <p class="sec-sub">1317 Executive Blvd, Suite 110, Chesapeake, VA 23320 &nbsp;·&nbsp; Free parking out front.</p>
+    <iframe src="https://www.google.com/maps?q=1317+Executive+Blvd+Suite+110,+Chesapeake,+VA+23320&output=embed" width="100%" height="420" style="border:0;border-radius:8px;box-shadow:0 12px 30px rgba(22,50,79,.14)" allowfullscreen loading="lazy" title="Coastal VA Tax office location"></iframe>
+    <div style="margin-top:22px"><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=1317+Executive+Blvd+Suite+110,+Chesapeake,+VA+23320" target="_blank" rel="noopener">Get Directions →</a></div>
+  </div></section>
   <section class="ctaband"><div class="wrap">
     <h2>Come Say Hello</h2>
     <p>1317 Executive Blvd, Suite 110, Chesapeake. Or start with a free phone consultation.</p>
@@ -697,9 +704,10 @@ var chatIntents=[
   [/\b(planning|plan ahead|estimate|quarterly)\b/i, function(){
     return {m:["Planning is the part most people skip, and it's usually where the money is. Bill does mid-year and fall check-ins so April is never a surprise.",
                "By the time filing season hits, you already know your number and you've had months to improve it."],c:["Set up a time with Bill"],offer:'book'};}],
-  [/\b(hour|open|location|address|where|office|directions)\b/i, function(){
-    return {m:["We're at 1317 Executive Blvd, Suite 110 in Chesapeake, right off the 168.",
-               "Bill sees clients by appointment, and honestly most things can be handled by phone and the portal without a trip in."],c:["Set up a time with Bill"],offer:'book'};}],
+  [/\b(hour|open|location|address|where|office|directions|map)\b/i, function(){
+    setTimeout(function(){go('about');setTimeout(function(){var f=document.querySelector('#pg-about iframe');if(f)f.scrollIntoView({behavior:'smooth',block:'center'})},600)},2000);
+    return {m:["We're at 1317 Executive Blvd, Suite 110 in Chesapeake, right off the 168, with free parking out front.",
+               "Here, I'll pull up the map for you."],c:["Set up a time with Bill"],offer:'book'};}],
   [/\b(phone|call|number|email|contact|reach)\b/i, function(){
     return {m:["Office line is (757) 530-4075, extension 233. Email is accounting@covatax.com.",
                "Or just drop your number here and Bill will text you back, that's usually the quickest."],offer:'text',c:["Have Bill text me"]};}],
